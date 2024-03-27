@@ -1,0 +1,5 @@
+treat,before,after,diff
+No treatment,13,16,3
+No treatment, 10,18,8
+No treatment,16,-16,0
+Placebo,16,13,-3
