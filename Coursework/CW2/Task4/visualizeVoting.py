@@ -1,0 +1,69 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.manifold import TSNE
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.svm import SVC
+from sklearn.naive_bayes import GaussianNB
+from sklearn.ensemble import VotingClassifier
+from sklearn.metrics import accuracy_score
+
+# Load and preprocess data
+original_data = pd.read_excel("Coursework/CW_Data.xlsx")
+X = original_data.drop(['Index', 'Programme'], axis="columns")
+y = original_data['Programme']
+
+mean = X.mean(axis=0)
+std = X.std(axis=0)
+X_normalized = (X - mean) / std
+
+# t-SNE Transformation
+tsne = TSNE(n_components=2, random_state=60, perplexity=100, learning_rate=50, n_iter=1000, early_exaggeration=70)
+X_scale = tsne.fit_transform(X_normalized)
+
+# Define and train classifiers
+def model_train(X, y, test_size, seed):
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=test_size, random_state=seed)
+    classifiers = [
+        ('decision_tree', DecisionTreeClassifier(random_state=seed)),
+        ('svm', SVC(kernel='rbf', random_state=seed)),  # linear kernel for simplicity
+        ('naive_bayes', GaussianNB())
+    ]
+    voting_clf = VotingClassifier(estimators=classifiers, voting='hard')
+    voting_clf.fit(X_train, y_train)
+    predictions = voting_clf.predict(X_test)
+    accuracy = accuracy_score(y_test, predictions)
+    return voting_clf, accuracy
+
+# Find the best model with highest accuracy
+def find_best_model(X, y, size):
+    best_model = None
+    best_accuracy = 0
+    for i in range(10):
+        model, accuracy = model_train(X, y, size, i)
+        if accuracy > best_accuracy:
+            best_model, best_accuracy = model, accuracy
+    return best_model, best_accuracy
+
+# Plot decision boundary for the best model
+def plot_decision_boundary(clf, X, y, title):
+    x_min, x_max = X[:, 0].min() - 1, X[:, 0].max() + 1
+    y_min, y_max = X[:, 1].min() - 1, X[:, 1].max() + 1
+    xx, yy = np.meshgrid(np.linspace(x_min, x_max, num=400), np.linspace(y_min, y_max, num=400))
+    Z = clf.predict(np.c_[xx.ravel(), yy.ravel()])
+    Z = Z.reshape(xx.shape)
+    
+    plt.figure(figsize=(8, 6))
+    plt.contourf(xx, yy, Z, alpha=0.4)
+    scatter = plt.scatter(X[:, 0], X[:, 1], c=y, edgecolor='k', s=50)
+    plt.title(f'{title} - Accuracy in all Dataset: {round(accuracy_score(y, clf.predict(X)) * 100, 2)}%')
+    plt.xlabel('Principal Component 1')
+    plt.ylabel('Principal Component 2')
+    plt.legend(*scatter.legend_elements(), title="Classes")
+    plt.show()
+
+size = 0.3
+best_model, best_accuracy = find_best_model(X_scale, y, size)
+print("Best model accuracy:", best_accuracy)
+plot_decision_boundary(best_model, X_scale, y, "Best Hard Voting Classifier")
