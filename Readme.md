@@ -9,7 +9,7 @@
 - `Final`: Previous test paper.
 - `PythonTutorial`: Useless materials.
 - `Module Handbook.pdf` : This is a pdf that tell you some basic information about this lesson.
-- `Coursework` : The foler contains the 3 coursework in my year, which have been modified to other patterns. 
+- `Coursework` : The foldder contains the 3 coursework in my year, which have been modified to other patterns. 
 - `Introduction to AI.doc` : Summary of class content.
 - `Lecture` : Class materials withe right oreder.
 ## Study experience
