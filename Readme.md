@@ -13,6 +13,6 @@
 - `Introduction to AI.doc` : Summary of class content.
 - `Lecture` : Class materials withe right oreder.
 ## Study experience
-- The three assignments were a huge workload, requiring three reports. Note that Professor Li doesn't write course recommendations; you'll need to do a surf test with him to get one. The final exam wasn't difficult; just look at the PowerPoint slides. You don't need to look at things like the GMM model; very few people know how to use it.
+- The three assignments were a huge workload, requiring three reports. Note that Professor Li doesn't write course recommendations; you'll need to do a surf with him to get one. The final exam wasn't difficult; just look at the PowerPoint slides. You don't need to look at things like the GMM; very few people know how to use it.
 ----
 
